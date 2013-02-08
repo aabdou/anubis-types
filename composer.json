@@ -1,0 +1,19 @@
+{
+    "name": "aabdou/anubis-types",
+    "description": "PHP data types",
+    "authors": [
+        {
+            "name": "Amir Abdou",
+            "email": "aabdou@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "autoload": {
+        "psr-0": {
+            "Anubis\\Tests\\Type": "tests/",
+            "Anubis\\Type": "src/"
+        }
+    }
+}

@@ -7,7 +7,7 @@ namespace Anubis\Type;
  *
  * @author Amir Abdou <amisaad@gmail.com>
  */
-class Map implements \ArrayAccess
+class Map implements \ArrayAccess, \Iterator, \Countable
 {
     /**
      * Internal list of elements
@@ -15,6 +15,13 @@ class Map implements \ArrayAccess
      * @var array
      */
     private $elements = [];
+    
+    /**
+     * Internal pointer
+     * 
+     * @var int 
+     */
+    private $index = 0;
     
     /**
      * Set a value at the offset
@@ -26,8 +33,8 @@ class Map implements \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        if (is_null($offset)) {
-            throw new \RuntimeException('The offset cannot be null');
+        if (is_null($offset) || is_resource($offset) || is_array($offset)) {
+            throw new \RuntimeException('Offset cannot be null, resource or an array');
         }
         
         // Create the map entry
@@ -97,5 +104,63 @@ class Map implements \ArrayAccess
         }
         
         return $hash;
+    }
+
+    /**
+     * Return the number of elements in the map
+     * 
+     * @return int
+     */
+    public function count ()
+    {
+        return count($this->elements);
+    }
+    
+    /**
+     * Return the key of the current element
+     * 
+     * @return mixed
+     */
+    public function current()
+    {   
+        return current($this->elements)->key;
+    }
+    
+    /**
+     * Return the hash of the current element
+     * 
+     * @return string
+     */
+    public function key()
+    {        
+        return key($this->elements);
+    }
+
+    /**
+     * Advance to the next element
+     */
+    public function next()
+    {
+        ++$this->index;
+        next($this->elements);
+    }
+
+    /**
+     * Reset the internal pointer
+     */
+    public function rewind()
+    {
+        $this->index = 0;
+        reset($this->elements);
+    }
+
+    /**
+     * Return true if the next position is valid
+     * 
+     * @return boolean
+     */
+    public function valid()
+    {
+        return count($this->elements) != 0 && $this->index < count($this->elements);
     }
 }
